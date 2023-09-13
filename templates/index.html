@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stopwatch App</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Stopwatch App</h1>
+    <button id="start-button">Start</button>
+    <button id="stop-button">Stop</button>
+    <div id="elapsed-time">0 seconds</div>
+
+    <script>
+        let timerInterval;
+        let elapsedSeconds = 0;
+
+        function formatTime(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const remainingSeconds = Math.floor(seconds % 60);
+            return `${hours} hours ${minutes} minutes ${remainingSeconds} seconds`;
+        }
+
+        document.getElementById('start-button').addEventListener('click', function () {
+            let elapsedTimeDisplay = document.getElementById('elapsed-time');
+
+            timerInterval = setInterval(function () {
+                elapsedSeconds += 0.1;
+                elapsedTimeDisplay.textContent = formatTime(elapsedSeconds);
+            }, 100);
+
+            fetch('/start_stopwatch', {
+                method: 'POST',
+            });
+
+            this.disabled = true;
+            document.getElementById('stop-button').disabled = false;
+        });
+
+        document.getElementById('stop-button').addEventListener('click', function () {
+            clearInterval(timerInterval);
+            document.getElementById('start-button').disabled = false;
+            this.disabled = true;
+        });
+    </script>
+</body>
+</html>
